@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dflong.storecontract.mapper.ContractFeeDetailInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.dflong.storecontract.entity.ContractFeeDetailInfo">
+        <id column="detail_id" property="detailId" jdbcType="VARCHAR"/>
+        <result column="contract_item_id" property="contractItemId" jdbcType="VARCHAR"/>
+        <result column="contract_id" property="contractId" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="total_amount" property="totalAmount" jdbcType="DECIMAL"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        detail_id, contract_item_id, contract_id, type, status, total_amount, create_time, create_user, update_time, update_user
+    </sql>
+
+</mapper>

@@ -1,0 +1,8 @@
+dubbo:
+  application:
+    name: storecontract
+  protocol:
+    name: tri
+    port: -1
+  registry:
+    address: zookeeper://localhost:2181

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dflong.storecontract.mapper.ContractInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.dflong.storecontract.entity.ContractInfo">
+        <id column="contract_id" property="contractId" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="total_amount" property="totalAmount" jdbcType="DECIMAL"/>
+        <result column="vehicle_model_id" property="vehicleModelId" jdbcType="BIGINT"/>
+        <result column="vin" property="vin" jdbcType="VARCHAR"/>
+        <result column="contract_start_time" property="contractStartTime" jdbcType="DATE"/>
+        <result column="contract_end_time" property="contractEndTime" jdbcType="DATE"/>
+        <result column="billing_start_time" property="billingStartTime" jdbcType="DATE"/>
+        <result column="billing_end_time" property="billingEndTime" jdbcType="DATE"/>
+        <result column="delivery_vehicle" property="deliveryVehicle" jdbcType="TINYINT"/>
+        <result column="pick_up_vehicle" property="pickUpVehicle" jdbcType="TINYINT"/>
+        <result column="pick_store_id" property="pickStoreId" jdbcType="BIGINT"/>
+        <result column="return_store_id" property="returnStoreId" jdbcType="BIGINT"/>
+        <result column="is_delete" property="isDelete" jdbcType="TINYINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        contract_id, user_id, status, total_amount, vehicle_model_id, vin, 
+        contract_start_time, contract_end_time, billing_start_time, billing_end_time,
+        delivery_vehicle, pick_up_vehicle, pick_store_id, return_store_id, is_delete,
+        create_time, create_by, update_time, update_by
+    </sql>
+
+    <select id="selectByContractId" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List"/>
+        FROM contract_info
+        WHERE contract_id = #{contractId}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List"/>
+        FROM contract_info
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List"/>
+        FROM contract_info
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectByStatus" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List"/>
+        FROM contract_info
+        WHERE status = #{status}
+        ORDER BY create_time DESC
+    </select>
+
+    <insert id="insert" parameterType="com.dflong.storecontract.entity.ContractInfo">
+        INSERT INTO contract_info (
+            contract_id, user_id, status, total_amount, vehicle_model_id, vin,
+            contract_start_time, contract_end_time, billing_start_time, billing_end_time,
+            delivery_vehicle, pick_up_vehicle, pick_store_id, return_store_id, is_delete,
+            create_time, create_by, update_time, update_by
+        ) VALUES (
+            #{contractId}, #{userId}, #{status}, #{totalAmount}, #{vehicleModelId}, #{vin},
+            #{contractStartTime}, #{contractEndTime}, #{billingStartTime}, #{billingEndTime},
+            #{deliveryVehicle}, #{pickUpVehicle}, #{pickStoreId}, #{returnStoreId}, #{isDelete},
+            #{createTime}, #{createBy}, #{updateTime}, #{updateBy}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.dflong.storecontract.entity.ContractInfo">
+        UPDATE contract_info
+        SET
+            user_id = #{userId},
+            status = #{status},
+            total_amount = #{totalAmount},
+            vehicle_model_id = #{vehicleModelId},
+            vin = #{vin},
+            contract_start_time = #{contractStartTime},
+            contract_end_time = #{contractEndTime},
+            billing_start_time = #{billingStartTime},
+            billing_end_time = #{billingEndTime},
+            delivery_vehicle = #{deliveryVehicle},
+            pick_up_vehicle = #{pickUpVehicle},
+            pick_store_id = #{pickStoreId},
+            return_store_id = #{returnStoreId},
+            is_delete = #{isDelete},
+            update_time = #{updateTime},
+            update_by = #{updateBy}
+        WHERE contract_id = #{contractId}
+    </update>
+
+    <delete id="deleteByContractId">
+        DELETE FROM contract_info
+        WHERE contract_id = #{contractId}
+    </delete>
+
+    <update id="updateStatus">
+        UPDATE contract_info
+        SET status = #{status}, update_time = NOW()
+        WHERE contract_id = #{contractId}
+    </update>
+
+</mapper>

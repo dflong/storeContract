@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dflong.storecontract.mapper.ContractDeliveryPickUpInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.dflong.storecontract.entity.ContractDeliveryPickUpInfo">
+        <id column="delivery_pick_up_id" property="deliveryPickUpId" jdbcType="VARCHAR"/>
+        <result column="contract_id" property="contractId" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="pay_no" property="payNo" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="total_amount" property="totalAmount" jdbcType="DECIMAL"/>
+        <result column="longitude" property="longitude" jdbcType="DOUBLE"/>
+        <result column="latitude" property="latitude" jdbcType="DOUBLE"/>
+        <result column="distance" property="distance" jdbcType="DOUBLE"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        delivery_pick_up_id, contract_id, type, pay_no, status, total_amount, longitude, latitude, distance, create_time, create_user, update_time, update_user
+    </sql>
+
+</mapper>
