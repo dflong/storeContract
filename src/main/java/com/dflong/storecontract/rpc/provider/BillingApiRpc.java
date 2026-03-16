@@ -1,7 +1,8 @@
 package com.dflong.storecontract.rpc.provider;
 
-import com.dflong.storeapi.api.goods.VehicleModel;
-import com.dflong.storeapi.api.goods.VehicleModelApi;
+import com.dflong.storeapi.api.billing.BillingApi;
+import com.dflong.storeapi.api.billing.CreateContractBillingBo;
+import com.dflong.storeapi.api.billing.CreateContractBillingDto;
 import com.dflong.storecontract.manage.ThreadPool;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,17 +11,17 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class VehicleModelApiRpc {
+public class BillingApiRpc {
 
     @DubboReference(check = false)
-    VehicleModelApi vehicleModelApi;
+    BillingApi billingApi;
 
     @Autowired
     ThreadPool threadPool;
 
-    public CompletableFuture<VehicleModel> getById(long vehicleModelId) {
+    public CompletableFuture<CreateContractBillingBo> orderContractAmount(CreateContractBillingDto dto) {
         return CompletableFuture.supplyAsync(() -> {
-            return vehicleModelApi.getById(vehicleModelId);
-        }, threadPool.goodsThreadPool());
+            return billingApi.orderContractAmount(dto);
+        }, threadPool.billingThreadPool());
     }
 }

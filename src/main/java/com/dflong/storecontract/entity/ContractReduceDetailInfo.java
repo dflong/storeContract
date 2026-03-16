@@ -3,8 +3,17 @@ package com.dflong.storecontract.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.dflong.storeapi.api.ConstantStatus;
+import com.dflong.storeapi.api.FeeTypeEnum;
+import com.dflong.storeapi.api.contract.ReduceFeeBo;
+import com.dflong.storeapi.api.contract.ServiceFeeBo;
+import com.dflong.storecontract.manage.DateUtils;
+
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 合同减免明细信息实体类
@@ -65,6 +74,31 @@ public class ContractReduceDetailInfo {
 
     // 构造函数
     public ContractReduceDetailInfo() {
+    }
+
+    public static List<ContractReduceDetailInfo> build(List<String> reduceDetailIds, String contractItemId, String contractId, long userId, LocalDateTime now, List<ReduceFeeBo> reduceFeeBoList) {
+        List<ContractReduceDetailInfo> res = new ArrayList<>();
+
+        for (int i = 0; i < reduceFeeBoList.size(); i++) {
+            ContractReduceDetailInfo detailInfo = new ContractReduceDetailInfo();
+
+            ReduceFeeBo reduceFeeBo = reduceFeeBoList.get(i);
+            detailInfo.setReduceDetailId(reduceDetailIds.get(i));
+            detailInfo.setContractItemId(contractItemId);
+            detailInfo.setContractId(contractId);
+            detailInfo.setType(reduceFeeBo.getFeeType());
+            detailInfo.setStatus(ConstantStatus.SUCCESS.getCode());
+            detailInfo.setTotalAmount(reduceFeeBo.getPrice());
+
+            detailInfo.setCreateBy(userId + "");
+            detailInfo.setCreateTime(DateUtils.fromLocalDateTime(now));
+            detailInfo.setUpdateBy(userId + "");
+            detailInfo.setUpdateTime(DateUtils.fromLocalDateTime(now));
+
+            res.add(detailInfo);
+
+        }
+        return res;
     }
 
     // getter和setter方法

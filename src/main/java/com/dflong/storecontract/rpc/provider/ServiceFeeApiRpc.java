@@ -6,13 +6,17 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 @Service
 public class ServiceFeeApiRpc {
 
     @DubboReference(check = false)
     ServiceFeeApi serviceFeeApi;
 
-    public List<ServiceFee> listByVehicleModel(long vehicleModelId) {
-        return serviceFeeApi.listByVehicleModel(vehicleModelId);
+    public CompletableFuture<List<ServiceFee>> listByVehicleModel(long vehicleModelId) {
+        return CompletableFuture.supplyAsync(() -> {
+            return serviceFeeApi.listByVehicleModel(vehicleModelId);
+        });
     }
 }

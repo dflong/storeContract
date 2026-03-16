@@ -2,15 +2,28 @@ package com.dflong.storecontract.rpc.provider;
 
 import com.dflong.storeapi.api.act.Coupon;
 import com.dflong.storeapi.api.act.CouponRpcService;
+import com.dflong.storecontract.manage.ThreadPool;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 @Service
 public class CouponRpcServiceRpc {
 
     @DubboReference(check = false)
     CouponRpcService couponRpcService;
+
+    @Autowired
+    private ThreadPool threadPool;
+
+    public CompletableFuture<Coupon> getById(Long couponId) {
+        return CompletableFuture.supplyAsync(() -> {
+            return couponRpcService.getById(couponId);
+        }, threadPool.actThreadPool());
+    }
 
     public List<Coupon> listByUserId(Long userId) {
         return couponRpcService.listByUserId(userId);

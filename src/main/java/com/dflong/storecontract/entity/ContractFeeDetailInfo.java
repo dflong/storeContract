@@ -3,9 +3,16 @@ package com.dflong.storecontract.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.dflong.storeapi.api.ConstantStatus;
+import com.dflong.storeapi.api.FeeTypeEnum;
+import com.dflong.storeapi.api.contract.ServiceFeeBo;
 import lombok.Data;
+import org.checkerframework.checker.units.qual.C;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 合同费用明细表
@@ -64,4 +71,36 @@ public class ContractFeeDetailInfo {
      * 更新人
      */
     private String updateUser;
+
+    public static List<ContractFeeDetailInfo> build(List<String> detailIds, String contractItemId, String contractId, long userId, LocalDateTime now,
+                                                    List<ServiceFeeBo> serviceFeeBoList, ContractDeliveryPickUpInfo deliveryInfo, ContractDeliveryPickUpInfo pickUpInfo) {
+        List<ContractFeeDetailInfo> res = new ArrayList<>();
+
+        for (int i = 0; i < serviceFeeBoList.size(); i++) {
+            ContractFeeDetailInfo detailInfo = new ContractFeeDetailInfo();
+
+            ServiceFeeBo serviceFeeBo = serviceFeeBoList.get(i);
+            detailInfo.setDetailId(detailIds.get(i));
+            if (serviceFeeBo.getFeeType() == FeeTypeEnum.DELIVERY_VEHICLE_FEE.getCode()) {
+                detailInfo.setContractItemId(deliveryInfo.getDeliveryPickUpId());
+            } else if (serviceFeeBo.getFeeType() == FeeTypeEnum.PICK_UP_VEHICLE_FEE.getCode()) {
+                detailInfo.setContractItemId(pickUpInfo.getDeliveryPickUpId());
+            } else {
+                detailInfo.setContractItemId(contractItemId);
+            }
+            detailInfo.setContractId(contractId);
+            detailInfo.setType(serviceFeeBo.getFeeType());
+            detailInfo.setStatus(ConstantStatus.SUCCESS.getCode());
+            detailInfo.setTotalAmount(serviceFeeBo.getPrice());
+
+            detailInfo.setCreateUser(userId + "");
+            detailInfo.setCreateTime(now);
+            detailInfo.setUpdateUser(userId + "");
+            detailInfo.setUpdateTime(now);
+
+            res.add(detailInfo);
+        }
+
+        return res;
+    }
 }

@@ -3,7 +3,11 @@ package com.dflong.storecontract.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.dflong.storeapi.api.PayStatus;
+import com.dflong.storecontract.manage.DateUtils;
+
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -22,12 +26,7 @@ public class PayInfo {
      * 合同ID
      */
     private String contractId;
-    
-    /**
-     * 合同项ID
-     */
-    private String contractItemId;
-    
+
     /**
      * 支付状态 1:待支付 2：已支付 3：已取消
      */
@@ -37,7 +36,12 @@ public class PayInfo {
      * 支付金额
      */
     private BigDecimal totalAmount;
-    
+
+    /**
+     * 支付时间
+     */
+    private Date payTime;
+
     /**
      * 创建时间
      */
@@ -62,6 +66,21 @@ public class PayInfo {
     public PayInfo() {
     }
 
+    public static PayInfo build(String payNo, String contractId, BigDecimal totalAmount, LocalDateTime now, long userId, int lazyPay) {
+        PayInfo info = new PayInfo();
+        info.setPayNo(payNo);
+        info.setContractId(contractId);
+        info.setStatus(PayStatus.WAIT_PAY.getCode());
+        info.setTotalAmount(totalAmount);
+        info.setPayTime(DateUtils.fromLocalDateTime(now.plusMinutes(lazyPay)));
+
+        info.setCreateBy(userId + "");
+        info.setCreateTime(DateUtils.fromLocalDateTime(now));
+        info.setUpdateBy(userId + "");
+        info.setUpdateTime(DateUtils.fromLocalDateTime(now));
+        return info;
+    }
+
     // getter和setter方法
     public String getPayNo() {
         return payNo;
@@ -79,14 +98,6 @@ public class PayInfo {
         this.contractId = contractId;
     }
 
-    public String getContractItemId() {
-        return contractItemId;
-    }
-
-    public void setContractItemId(String contractItemId) {
-        this.contractItemId = contractItemId;
-    }
-
     public Integer getStatus() {
         return status;
     }
@@ -101,6 +112,14 @@ public class PayInfo {
 
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public Date getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(Date payTime) {
+        this.payTime = payTime;
     }
 
     public Date getCreateTime() {
@@ -140,9 +159,9 @@ public class PayInfo {
         return "PayInfo{" +
                 "payNo='" + payNo + '\'' +
                 ", contractId='" + contractId + '\'' +
-                ", contractItemId='" + contractItemId + '\'' +
                 ", status=" + status +
                 ", totalAmount=" + totalAmount +
+                ", payTime=" + payTime +
                 ", createTime=" + createTime +
                 ", createBy='" + createBy + '\'' +
                 ", updateTime=" + updateTime +

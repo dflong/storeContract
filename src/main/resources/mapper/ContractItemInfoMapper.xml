@@ -20,13 +20,6 @@
         create_time, create_by, update_time, update_by
     </sql>
 
-    <select id="selectByContractItemId" resultMap="BaseResultMap">
-        SELECT 
-        <include refid="Base_Column_List"/>
-        FROM contract_item_info
-        WHERE contract_item_id = #{contractItemId}
-    </select>
-
     <select id="selectByContractId" resultMap="BaseResultMap">
         SELECT 
         <include refid="Base_Column_List"/>
@@ -41,57 +34,6 @@
         FROM contract_item_info
         WHERE pay_no = #{payNo}
     </select>
-
-    <select id="selectByType" resultMap="BaseResultMap">
-        SELECT 
-        <include refid="Base_Column_List"/>
-        FROM contract_item_info
-        WHERE type = #{type}
-        ORDER BY create_time DESC
-    </select>
-
-    <select id="selectByStatus" resultMap="BaseResultMap">
-        SELECT 
-        <include refid="Base_Column_List"/>
-        FROM contract_item_info
-        WHERE status = #{status}
-        ORDER BY create_time DESC
-    </select>
-
-    <select id="selectAll" resultMap="BaseResultMap">
-        SELECT 
-        <include refid="Base_Column_List"/>
-        FROM contract_item_info
-        ORDER BY create_time DESC
-    </select>
-
-    <insert id="insert" parameterType="com.dflong.storecontract.entity.ContractItemInfo">
-        INSERT INTO contract_item_info (
-            contract_item_id, contract_id, type, pay_no, status, total_amount,
-            create_time, create_by, update_time, update_by
-        ) VALUES (
-            #{contractItemId}, #{contractId}, #{type}, #{payNo}, #{status}, #{totalAmount},
-            #{createTime}, #{createBy}, #{updateTime}, #{updateBy}
-        )
-    </insert>
-
-    <update id="update" parameterType="com.dflong.storecontract.entity.ContractItemInfo">
-        UPDATE contract_item_info
-        SET
-            contract_id = #{contractId},
-            type = #{type},
-            pay_no = #{payNo},
-            status = #{status},
-            total_amount = #{totalAmount},
-            update_time = #{updateTime},
-            update_by = #{updateBy}
-        WHERE contract_item_id = #{contractItemId}
-    </update>
-
-    <delete id="deleteByContractItemId">
-        DELETE FROM contract_item_info
-        WHERE contract_item_id = #{contractItemId}
-    </delete>
 
     <update id="updateStatus">
         UPDATE contract_item_info

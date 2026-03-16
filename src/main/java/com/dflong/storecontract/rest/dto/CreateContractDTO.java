@@ -1,7 +1,9 @@
-package com.dflong.storecontract.rest;
+package com.dflong.storecontract.rest.dto;
 
-import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
+import java.util.List;
 
 public class CreateContractDTO {
 
@@ -9,11 +11,16 @@ public class CreateContractDTO {
 
     private long vehicleModelId;
 
-    private BigDecimal totalAmount;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
+
+    /**
+     * 取车门店
+     */
+    private long pickStoreId;
 
     /**
      * 是否有送车上门服务 1：有 2：没有
@@ -25,6 +32,11 @@ public class CreateContractDTO {
     private double deliveryLatitude;
 
     /**
+     * 还车门店
+     */
+    private long returnStoreId;
+
+    /**
      * 是否有上门取车服务 1：有 2：没有
      */
     private int pickUpVehicle;
@@ -33,15 +45,36 @@ public class CreateContractDTO {
 
     private double pickUpLatitude;
 
-    /**
-     * 取车门店
-     */
-    private long pickStoreId;
+    private List<Integer> feeIds;
 
-    /**
-     * 还车门店
-     */
-    private long returnStoreId;
+    private long packageId;
+
+    private long couponId;
+
+
+    public List<Integer> getFeeIds() {
+        return feeIds;
+    }
+
+    public void setFeeIds(List<Integer> feeIds) {
+        this.feeIds = feeIds;
+    }
+
+    public long getPackageId() {
+        return packageId;
+    }
+
+    public void setPackageId(long packageId) {
+        this.packageId = packageId;
+    }
+
+    public long getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(long couponId) {
+        this.couponId = couponId;
+    }
 
     public long getUserId() {
         return userId;
@@ -57,14 +90,6 @@ public class CreateContractDTO {
 
     public void setVehicleModelId(long vehicleModelId) {
         this.vehicleModelId = vehicleModelId;
-    }
-
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(BigDecimal totalAmount) {
-        this.totalAmount = totalAmount;
     }
 
     public Date getStartTime() {

@@ -22,4 +22,6 @@
         delivery_pick_up_id, contract_id, type, pay_no, status, total_amount, longitude, latitude, distance, create_time, create_user, update_time, update_user
     </sql>
 
+
+
 </mapper>

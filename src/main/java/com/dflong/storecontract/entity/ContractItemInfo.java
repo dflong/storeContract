@@ -3,7 +3,14 @@ package com.dflong.storecontract.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.dflong.storeapi.api.ConstantItemTypeStatus;
+import com.dflong.storeapi.api.ConstantStatus;
+import com.dflong.storeapi.api.billing.CreateContractBillingBo;
+import com.dflong.storeapi.api.contract.StoreInfBo;
+import com.dflong.storecontract.manage.DateUtils;
+
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -65,6 +72,24 @@ public class ContractItemInfo {
 
     // 构造函数
     public ContractItemInfo() {
+    }
+
+    public static ContractItemInfo build(String contractItemId, LocalDateTime now, CreateContractBillingBo billingBo, String payNo, long userId) {
+        ContractItemInfo contractItemInfo = new ContractItemInfo();
+
+        contractItemInfo.setContractItemId(contractItemId);
+        contractItemInfo.setContractId(contractItemId);
+        contractItemInfo.setType(ConstantItemTypeStatus.CREATE.getCode());
+        contractItemInfo.setPayNo(payNo);
+        contractItemInfo.setStatus(ConstantStatus.SUCCESS.getCode());
+        StoreInfBo storeInfBo = billingBo.getStoreInfBo();
+        contractItemInfo.setTotalAmount(billingBo.getTotalAmount().subtract(storeInfBo.getPickUpPrice()).subtract(storeInfBo.getReturnPrice())); // 总金额减去取还车费用
+
+        contractItemInfo.setCreateBy(userId + "");
+        contractItemInfo.setCreateTime(DateUtils.fromLocalDateTime(now));
+        contractItemInfo.setUpdateBy(userId + "");
+        contractItemInfo.setUpdateTime(DateUtils.fromLocalDateTime(now));
+        return contractItemInfo;
     }
 
     // getter和setter方法
