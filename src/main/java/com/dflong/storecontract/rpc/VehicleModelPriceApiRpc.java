@@ -1,4 +1,4 @@
-package com.dflong.storecontract.rpc.provider;
+package com.dflong.storecontract.rpc;
 
 import com.dflong.storeapi.api.goods.VehicleModelPrice;
 import com.dflong.storeapi.api.goods.VehicleModelPriceApi;

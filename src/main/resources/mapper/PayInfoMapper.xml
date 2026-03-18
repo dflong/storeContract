@@ -22,7 +22,7 @@
     <update id="updateStatus">
         UPDATE pay_info
         SET status = #{status}, update_time = NOW()
-        WHERE pay_no = #{payNo}
+        WHERE contract_id = #{contractId} and status = #{preStatus}
     </update>
 
 </mapper>

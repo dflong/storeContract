@@ -1,4 +1,4 @@
-package com.dflong.storecontract.rpc.provider;
+package com.dflong.storecontract.rpc;
 
 import com.dflong.storeapi.api.act.Coupon;
 import com.dflong.storeapi.api.act.CouponRpcService;

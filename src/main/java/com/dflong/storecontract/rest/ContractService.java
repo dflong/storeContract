@@ -22,16 +22,11 @@ import com.dflong.storecontract.manage.DateUtils;
 import com.dflong.storecontract.manage.ThreadPool;
 import com.dflong.storecontract.rest.bo.CreateContractDB;
 import com.dflong.storecontract.rest.dto.CreateContractDTO;
-import com.dflong.storecontract.rpc.provider.*;
+import com.dflong.storecontract.rpc.*;
 import com.dflong.storecontract.transaction.ContractTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
-import org.springframework.transaction.support.TransactionSynchronization;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -95,8 +90,8 @@ public class ContractService {
 
         // 下单前校验、组装billing参数
         CreateContractBillingDto billingDto = buildCreateContractBillingDto(dto, now);
-        int startDay = billingDto.getStartDay();
-        int endDay = billingDto.getEndDay();
+        int startDay = DateUtils.dateToInt2(dto.getStartTime());
+        int endDay = DateUtils.dateToInt2(dto.getEndTime());
         dto = null; // 及时释放内存
 
         // 计算费用
@@ -124,9 +119,6 @@ public class ContractService {
         redisTemplate.opsForValue().set(ongoingContractKey, ContractStatusEnum.PREPARING_VEHICLE.getCode() + "");
         return createContractDB.getContractId();
     }
-
-    @Autowired
-    private PlatformTransactionManager transactionManager;
 
     private CreateContractDB buildContractDB(LocalDateTime now, long userId, CreateContractBillingBo billingBo) {
         IDGenerator idGenerator = new IDGenerator(redisTemplate);

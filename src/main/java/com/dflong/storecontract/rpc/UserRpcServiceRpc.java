@@ -1,4 +1,4 @@
-package com.dflong.storecontract.rpc.provider;
+package com.dflong.storecontract.rpc;
 
 import com.dflong.storeapi.api.user.User;
 import com.dflong.storeapi.api.user.UserRpcService;

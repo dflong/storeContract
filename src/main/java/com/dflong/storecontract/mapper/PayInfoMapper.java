@@ -16,5 +16,5 @@ public interface PayInfoMapper extends BaseMapper<PayInfo> {
     /**
      * 根据支付订单号更新支付状态
      */
-    int updateStatus(@Param("payNo") String payNo, @Param("status") Integer status);
+    int updateStatus(@Param("contractId") String contractId, @Param("status") Integer status, @Param("preStatus") Integer preStatus);
 }

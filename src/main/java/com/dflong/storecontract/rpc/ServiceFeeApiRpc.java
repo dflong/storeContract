@@ -1,4 +1,4 @@
-package com.dflong.storecontract.rpc.provider;
+package com.dflong.storecontract.rpc;
 
 import com.dflong.storeapi.api.goods.ServiceFee;
 import com.dflong.storeapi.api.goods.ServiceFeeApi;

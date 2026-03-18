@@ -18,7 +18,7 @@ public class DateUtils {
 
     public static int dayDiffer(Date start, Date end) {
         if (start.after(end)) return dayDiffer(end, start);
-        if (start == null || end == null) {
+        if (end == null) {
             throw new ThrowException(-1, "日期不能为空");
         }
         LocalDateTime startDate = start.toInstant()
@@ -37,8 +37,8 @@ public class DateUtils {
     }
 
     /**
-     * 转换为yyyyMMddHH格式的整数
-     * @return 如：2026041215
+     * 转换为yyyyMMdd格式的整数
+     * @return 如：20260412
      */
     public static int dateToInt(Date date) {
         if (date == null) {
@@ -85,4 +85,8 @@ public class DateUtils {
                  .atZone(ZoneId.systemDefault())
                  .toLocalDateTime();
      }
+
+    public static Date fromString(String dateStr) {
+        return Date.from(LocalDateTime.parse(dateStr, formatter1).atZone(ZoneId.systemDefault()).toInstant());
+    }
 }
