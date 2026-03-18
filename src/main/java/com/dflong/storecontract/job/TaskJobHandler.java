@@ -1,5 +1,9 @@
 package com.dflong.storecontract.job;
 
+import com.dflong.storecontract.constant.TaskJobType;
+import com.dflong.storecontract.entity.TaskJob;
+import com.dflong.storecontract.mapper.TaskJobMapper;
+import com.dflong.storecontract.rpc.CouponRpcServiceRpc;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import org.slf4j.Logger;
@@ -8,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 任务处理器
@@ -17,9 +22,11 @@ public class TaskJobHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(TaskJobHandler.class);
 
+    @Autowired
+    TaskJobMapper taskJobMapper;
 
     @Autowired
-    RefreshContractRanking refreshContractRanking;
+    CouponRpcServiceRpc couponRpcServiceRpc;
 
     /**
      *重试任务
@@ -28,36 +35,33 @@ public class TaskJobHandler {
     @XxlJob("taskTypeJobHandler")
     public void taskTypeJobHandler() throws Exception {
         logger.info("2506 开始执行重试任务......");
-        refreshContractRanking.refreshContractTotalAmountRanking();
         try {
-            // 查询待处理的重试记录，每次最多处理100条
-//            List<RedisDeleteRetry> pendingRecords = redisDeleteRetryMapper.selectPendingRecords(100);
-//
-//            if (pendingRecords.isEmpty()) {
-//                XxlJobHelper.log("未发现待处理的Redis删除重试记录");
-//                return;
-//            }
-//
-//            XxlJobHelper.log("发现 {} 条待处理的Redis删除重试记录", pendingRecords.size());
-//
-//            int successCount = 0;
-//            int failureCount = 0;
-//
-//            for (RedisDeleteRetry record : pendingRecords) {
-//                try {
-//
-//                } catch (Exception e) {
-//
-//                }
-//            }
-
-//            XxlJobHelper.log("Redis删除重试任务执行完成: 成功 {} 条, 失败 {} 条, 清理成功记录 {} 条",
-//                    successCount, failureCount, 0);
-                    
+            List<TaskJob> taskJobs = taskJobMapper.selectPendingRecords(1, new Date());
+            if (taskJobs == null || taskJobs.isEmpty()) return;
+            for (TaskJob taskJob : taskJobs) {
+                boolean runSuccess = false;
+                if (taskJob.getTaskType() == TaskJobType.FREEZE_COUPON) {
+                    runSuccess = couponRpcServiceRpc.freeze(Long.parseLong(taskJob.getTaskId()));
+                } else if (taskJob.getTaskType() == TaskJobType.UNFREEZE_COUPON) {
+                    runSuccess = couponRpcServiceRpc.unfreeze(Long.parseLong(taskJob.getTaskId()));
+                } else {
+                    // todo 其他任务类型
+                }
+                runTask(taskJob, runSuccess);
+            }
         } catch (Exception e) {
             XxlJobHelper.log("Redis删除重试任务执行失败: " + e.getMessage());
             logger.error("Redis删除重试任务执行失败", e);
             throw e;
+        }
+    }
+
+    public void runTask(TaskJob taskJob, boolean runSuccess) {
+        if (runSuccess) {
+            taskJobMapper.deleteByTaskIdAndTaskType(taskJob.getTaskId(), taskJob.getTaskType());
+        } else {
+            taskJob.setNextRunTime(calculateNextRetryTime(taskJob.getRunCnt() + 1));
+            taskJobMapper.updateById(taskJob);
         }
     }
 

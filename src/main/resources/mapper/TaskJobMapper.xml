@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dflong.storecontract.mapper.TaskJobMapper">
+
+    <resultMap id="BaseResultMap" type="com.dflong.storecontract.entity.TaskJob">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="task_type" property="taskType" jdbcType="TINYINT"/>
+        <result column="task_id" property="taskId" jdbcType="VARCHAR"/>
+        <result column="extra" property="extra" jdbcType="VARCHAR"/>
+        <result column="task_status" property="taskStatus" jdbcType="TINYINT"/>
+        <result column="run_cnt" property="runCnt" jdbcType="INTEGER"/>
+        <result column="fail_reason" property="failReason" jdbcType="VARCHAR"/>
+        <result column="last_run_time" property="lastRunTime" jdbcType="TIMESTAMP"/>
+        <result column="next_run_time" property="nextRunTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, task_type, task_id, extra, task_status, run_cnt, fail_reason,
+        last_run_time, next_run_time, create_time, update_time
+    </sql>
+
+    <select id="selectPendingRecords" resultType="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM task_job
+        WHERE task_status = #{taskStatus} and #{lastRunTime} >= next_run_time
+    </select>
+
+    <delete id="deleteByTaskIdAndTaskType">
+        delete from task_job where task_id = #{taskId} and task_type = #{taskType}
+    </delete>
+
+</mapper>

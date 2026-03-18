@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dflong.storecontract.entity.ContractInfo;
 import com.dflong.storecontract.manage.DateUtils;
 import com.dflong.storecontract.mapper.ContractInfoMapper;
+import com.xxl.job.core.handler.annotation.XxlJob;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
@@ -15,6 +18,8 @@ import java.util.*;
 
 @Component
 public class RefreshContractRanking {
+
+    private static final Logger logger = LoggerFactory.getLogger(RefreshContractRanking.class);
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
@@ -26,6 +31,7 @@ public class RefreshContractRanking {
 
     double maxRanking = 1000000;
 
+    @XxlJob("refreshContractTotalAmountRanking")
     public void refreshContractTotalAmountRanking() {
         Date startTime = DateUtils.fromString("2026-03-01 00:00:00");
         Date endTime = DateUtils.fromString("2026-05-01 00:00:00");
@@ -47,7 +53,7 @@ public class RefreshContractRanking {
         redisTemplate.opsForZSet().add(redisKey, set); // 先加入
         redisTemplate.opsForZSet().removeRange(redisKey, 10, -1); // 只保留前10名
         Set<Object> objects = redisTemplate.opsForZSet().range(redisKey, 5, 9);// [start, end] score第6到第9
-        System.out.println("排行榜前10名: " + JSON.toJSONString(objects));
+        logger.info("排行榜前10名: " + JSON.toJSONString(objects));
     }
 
 }
