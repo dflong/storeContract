@@ -21,11 +21,11 @@
         last_run_time, next_run_time, create_time, update_time
     </sql>
 
-    <select id="selectPendingRecords" resultType="BaseResultMap">
+    <select id="selectPendingRecords" resultType="com.dflong.storecontract.entity.TaskJob">
         SELECT
         <include refid="Base_Column_List"/>
         FROM task_job
-        WHERE task_status = #{taskStatus} and #{lastRunTime} >= next_run_time
+        WHERE task_status = #{status} and #{lastRunTime} >= next_run_time
     </select>
 
     <delete id="deleteByTaskIdAndTaskType">

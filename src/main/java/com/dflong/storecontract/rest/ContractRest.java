@@ -3,12 +3,15 @@ package com.dflong.storecontract.rest;
 import com.dflong.storeapi.api.Result;
 import com.dflong.storeapi.api.StatusCode;
 import com.dflong.storeapi.api.ThrowException;
+import com.dflong.storecontract.entity.ContractInfo;
+import com.dflong.storecontract.rest.bo.ContractInfoBo;
 import com.dflong.storecontract.rest.dto.CreateContractDTO;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -17,6 +20,9 @@ public class ContractRest {
 
     @Autowired
     private ContractService contractService;
+
+    @Autowired
+    private ContractQueryService queryService;
 
     @Autowired
     private RedissonClient redissonClient;
@@ -46,6 +52,12 @@ public class ContractRest {
             }
         }
         return Result.build(-2506001, "请勿重试", "");
+    }
+
+    @GetMapping("/list")
+    public Result list() throws InterruptedException {
+        List<ContractInfoBo> contractInfoList = queryService.listContracts();
+        return Result.build(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), contractInfoList);
     }
 
 }

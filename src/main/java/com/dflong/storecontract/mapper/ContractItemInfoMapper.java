@@ -11,7 +11,7 @@ import java.util.List;
  * 合同项信息Mapper接口
  */
 @Mapper
-public interface ContractItemInfoMapper extends BaseMapper< ContractItemInfo> {
+public interface ContractItemInfoMapper extends BaseMapper<ContractItemInfo> {
     
     /**
      * 根据合同ID查询合同项列表
