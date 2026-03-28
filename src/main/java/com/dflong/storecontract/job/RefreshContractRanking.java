@@ -52,7 +52,7 @@ public class RefreshContractRanking {
         }
         redisTemplate.opsForZSet().add(redisKey, set); // 先加入
         redisTemplate.opsForZSet().removeRange(redisKey, 10, -1); // 只保留前10名
-        Set<Object> objects = redisTemplate.opsForZSet().range(redisKey, 5, 9);// [start, end] score第6到第9
+        Set<Object> objects = redisTemplate.opsForZSet().range(redisKey, 5, 9);// [start, end] score第6到第10
         logger.info("排行榜前10名: " + JSON.toJSONString(objects));
     }
 
